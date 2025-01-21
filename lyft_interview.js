@@ -2,12 +2,18 @@
 
 /* Return true if driver has driven less than 12 hours since their last 8 hour break */
 function canDrive(history, currentTime) {
-    if (!history || history.length === 0 || currentTime == null) return false;
+    if (!history || history.length === 0 || currentTime == null) {
+        console.log("Not enough information.");
+        return false;
+    }
 
     let length = history.length;
     let last = 0; hours_worked = 0; last_break = 0;
 
-    if (currentTime - history[length - 1][1] >= 8) return true;
+    if (currentTime - history[length - 1][1] >= 8) {
+        console.log("More than 8 hours passed since last shift, okay to drive.");
+        return true;
+    }
 
     for (let i = 0; i < length; i++) {
         if (last > 0) {
@@ -15,12 +21,14 @@ function canDrive(history, currentTime) {
         }
         hours_worked += history[i][1] - history[i][0];
         if (hours_worked >= 12 && last_break < 8) {
+            console.log("Exceeding 12 hours without 8 hour break.");
             return false;
         } else if (last_break >= 8) {
             hours_worked = 0;
         }
         last = history[i][1];
     }
+    console.log("Okay to drive, sufficient break taken.");
     return true;
 }
 
